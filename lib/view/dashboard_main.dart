@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:homeapp/model/status.dart';
+import 'package:homeapp/view/data_detail.dart';
 import 'package:http/http.dart' as http;
 
 class DashboardMain extends StatefulWidget {
@@ -88,22 +89,82 @@ class _DashboardMainState extends State<DashboardMain> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  circularIconButton(Colors.lightBlue[200]!, Icons.whatshot,
-                      Colors.white, "가스", status.gas.toString()),
+                  InkWell(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                DataDetail(data: "gas", host: host))),
+                    child: circularIconButton(
+                        Colors.lightBlue[200]!,
+                        Icons.whatshot,
+                        Colors.white,
+                        "가스",
+                        status.gas.toString()),
+                  ),
                   SizedBox(width: 20),
-                  circularIconButton(Colors.lightBlue[200]!, Icons.thermostat,
-                      Colors.white, "온도", status.temperature.toString()),
+                  InkWell(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                DataDetail(data: "temperature", host: host))),
+                    child: circularIconButton(
+                        Colors.lightBlue[200]!,
+                        Icons.thermostat,
+                        Colors.white,
+                        "온도",
+                        status.temperature.toString()),
+                  ),
                 ],
               ),
               SizedBox(height: 10),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  circularIconButton(Colors.lightBlue[200]!, Icons.opacity,
-                      Colors.white, "습도", status.humidity.toString()),
+                  InkWell(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                DataDetail(data: "humidity", host: host))),
+                    child: circularIconButton(
+                        Colors.lightBlue[200]!,
+                        Icons.opacity,
+                        Colors.white,
+                        "습도",
+                        status.humidity.toString()),
+                  ),
                   SizedBox(width: 20),
-                  circularIconButton(Colors.lightBlue[200]!, Icons.masks,
-                      Colors.white, "미세먼지", status.pm2p5.toString()),
+                  InkWell(
+                    onTap: () => showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              title: Text("미세먼지 상세정보"),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text("PM 1.0: " + status.pm1p0.toString()),
+                                  Text("PM 2.5: " + status.pm2p5.toString()),
+                                  Text("PM 10: " + status.pm10.toString())
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: const Text('확인'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            )),
+                    child: circularIconButton(
+                        Colors.lightBlue[200]!,
+                        Icons.masks,
+                        Colors.white,
+                        "미세먼지",
+                        status.pm2p5.toString()),
+                  ),
                 ],
               ),
             ],
@@ -113,29 +174,69 @@ class _DashboardMainState extends State<DashboardMain> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: MediaQuery.of(context).size.width / 2 - 40,
-              padding: EdgeInsets.symmetric(vertical: 15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.lightBlue[100],
-              ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.insights,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "데이터 모아보기",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+            InkWell(
+              onTap: () => showModalBottomSheet(
+                  context: context,
+                  builder: (context) => Column(
+                        children: [
+                          InkWell(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          DataDetail(data: 'gas', host: host))),
+                              child: Card(
+                                  child: ListTile(title: Text("가스 자세히 보기")))),
+                          InkWell(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DataDetail(
+                                          data: 'temperature', host: host))),
+                              child: Card(
+                                  child: ListTile(title: Text("온도 자세히 보기")))),
+                          InkWell(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DataDetail(
+                                          data: 'humidity', host: host))),
+                              child: Card(
+                                  child: ListTile(title: Text("습도 자세히 보기")))),
+                          InkWell(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DataDetail(
+                                          data: 'pm2p5', host: host))),
+                              child: Card(
+                                  child: ListTile(title: Text("미세먼지 자세히 보기")))),
+                        ],
+                      )),
+              child: Container(
+                width: MediaQuery.of(context).size.width / 2 - 40,
+                padding: EdgeInsets.symmetric(vertical: 15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: Colors.lightBlue[100],
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.insights,
+                      size: 50,
+                      color: Colors.white,
                     ),
-                  )
-                ],
+                    SizedBox(height: 10),
+                    Text(
+                      "데이터 모아보기",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             SizedBox(width: 25),

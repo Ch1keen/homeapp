@@ -165,6 +165,86 @@ class _DashboardMainState extends State<DashboardMain> {
                         "미세먼지",
                         status.pm2p5.toString()),
                   ),
+                  SizedBox(width: 20),
+                  InkWell(
+                    onTap: () => showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              title: Text("팬을 강제로 작동할까요?"),
+                              actions: [
+                                TextButton(
+                                  child: const Text('환기'),
+                                  onPressed: () async {
+                                    http.Response strResponse = await http.put(
+                                        Uri.parse(host),
+                                        headers: {
+                                          'Content-Type': 'application/json'
+                                        },
+                                        body: json.encode({
+                                          'home': {
+                                            'serial_number': 'abc',
+                                            'fan_force': 1
+                                          }
+                                        }));
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: const Text('냉방'),
+                                  onPressed: () async {
+                                    http.Response strResponse = await http.put(
+                                        Uri.parse(host),
+                                        headers: {
+                                          'Content-Type': 'application/json'
+                                        },
+                                        body: json.encode({
+                                          'home': {
+                                            'serial_number': 'abc',
+                                            'fan_force': -1
+                                          }
+                                        }));
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: const Text('팬 끄기'),
+                                  onPressed: () async {
+                                    http.Response strResponse = await http.put(
+                                        Uri.parse(host),
+                                        headers: {
+                                          'Content-Type': 'application/json'
+                                        },
+                                        body: json.encode({
+                                          'home': {
+                                            'serial_number': 'abc',
+                                            'fan_force': 0
+                                          }
+                                        }));
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: const Text('자동'),
+                                  onPressed: () async {
+                                    http.Response strResponse = await http.put(
+                                        Uri.parse(host),
+                                        headers: {
+                                          'Content-Type': 'application/json'
+                                        },
+                                        body: json.encode({
+                                          'home': {
+                                            'serial_number': 'abc',
+                                            'fan_force': 2
+                                          }
+                                        }));
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            )),
+                    child: circularIconButton(Colors.lightBlue[200]!, Icons.air,
+                        Colors.white, "팬 동작", status.fanForceToString()),
+                  ),
                 ],
               ),
             ],
@@ -276,8 +356,8 @@ class _DashboardMainState extends State<DashboardMain> {
       children: [
         ClipOval(
           child: Container(
-            width: 100,
-            height: 100,
+            width: 90,
+            height: 90,
             color: bgColor,
             child: Icon(
               icon,

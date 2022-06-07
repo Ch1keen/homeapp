@@ -9,6 +9,7 @@ class Status {
   double gas = 0;
   double brightness = 0;
   double fan = 0;
+  int fanForce = 2;
   double window = 0;
   String timesAgo = "초기화중...";
 
@@ -21,6 +22,7 @@ class Status {
     gas = 0;
     brightness = 0;
     fan = 0;
+    fanForce = 0;
     window = 0;
     timesAgo = "초기화중...";
   }
@@ -36,7 +38,20 @@ class Status {
     gas = response['gas'] ?? 0;
     brightness = response['brightness'] ?? 0;
     fan = response['fan'] ?? 0;
+    fanForce = response['fan_force'] ?? 2;
     window = response['window'] ?? 0;
     timesAgo = response['times_ago'] ?? "에러";
+  }
+
+  String fanForceToString() {
+    if (fanForce == 0) {
+      return "멈춤";
+    } else if (fanForce == 1) {
+      return "환기";
+    } else if (fanForce == -1) {
+      return "냉방";
+    } else {
+      return "자동";
+    }
   }
 }
